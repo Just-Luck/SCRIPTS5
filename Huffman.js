@@ -1,3 +1,4 @@
+//*Создаем класс для элементов нашего дерева
 class Node {
   constructor(value, char = null) {
     this.value = value;
@@ -11,8 +12,8 @@ let endSymbol = `●`;
 function HuffmanEncoding(str) {
   str += endSymbol; //*Добавляем end символ
   let alphabet = []; //*Массив алфавита
-  for (let char of str) alphabet[char] = (alphabet[char] || 0) + 1; //* Определяем алфавит
-  for (let char in alphabet) {
+  for (char of str) alphabet[char] = (alphabet[char] || 0) + 1; //* Определяем алфавит
+  for (char in alphabet) {
     //* Преобразуем алфавит с конструктором Node
     alphabet.push(new Node(alphabet[char], char)); //*Добавляем элемент в массив, тип Node
     delete alphabet[char]; //*Удаляем тот символ, который мы обработали
@@ -20,11 +21,11 @@ function HuffmanEncoding(str) {
   //*Строим дерево
   while (alphabet.length > 1) {
     alphabet.sort((a, b) => b.value - a.value);
-    const left = alphabet.pop();
-    const right = alphabet.pop();
-    const parent = new Node(left.value + right.value);
-    parent.left = left;
-    parent.right = right;
+    let left = alphabet.pop(); //*Левая ветвь
+    let right = alphabet.pop(); //*Правая ветвь
+    let parent = new Node(left.value + right.value); //*Код пути до этих элементов
+    parent.left = left; //* Присваиваем новый элемент слева
+    parent.right = right; //* Присваиваем новый элемент справа
     alphabet.push(parent);
   }
   //?alphabet - стал вершиной дерева Хофмана, те главным объектом с ветками
@@ -50,15 +51,16 @@ function HuffmanEncoding(str) {
 }
 
 function HuffmanDecoding(encodedStr, codes) {
-  let decodedStr = "";
-  let code = "";
+  let decodedStr = ""; //*Результат декодирования
+  let code = ""; //*Текущий код
   for (digit of encodedStr) {
-    code += digit;
+    code += digit; //* Добавляем символ к коду
     if (codes[endSymbol] == code) break; //*Если это end символ, то прекращаем декодирование
     for (char in codes) {
       if (codes[char] === code) {
-        decodedStr += char;
-        code = "";
+        //* Если нашло совпадающий символ, то декодируем
+        decodedStr += char; //*Добавляем символ к результату декодирования
+        code = ""; //* Очищаем код
         break;
       }
     }
@@ -66,6 +68,7 @@ function HuffmanDecoding(encodedStr, codes) {
   return decodedStr;
 }
 
+//*Экспортируем функции кодирования и декодирования
 module.exports = {
   HuffmanEncoding,
   HuffmanDecoding,
